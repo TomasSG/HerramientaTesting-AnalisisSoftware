@@ -16,11 +16,14 @@ public class App {
 		
 		for(String linea : array) {
 			if(Verificador.esEncabezadoClase(linea)) {
-				clase = new Clase(Verificador.getNombreClase(linea));
-			} else if(Verificador.esEncabezadoMetodo(linea))
+				clase = new Clase(Parser.getNombreClase(linea));
+			} else if(Verificador.esEncabezadoMetodo(linea)) {
+				clase.agregarMetodo(new Metodo(Parser.getNombreMetodo(linea)));
+			}
 		}
 	
 		
 		System.out.println(clase.getNombre());
+		clase.imprimirNombresMetodos();
 	}
 }

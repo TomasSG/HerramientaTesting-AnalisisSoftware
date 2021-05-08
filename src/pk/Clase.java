@@ -14,6 +14,20 @@ public class Clase {
 	}
 
 
+
+	
+	public void agregarMetodo(Metodo metodo) {
+		this.metodos.add(metodo);
+	}
+	
+	public void imprimirNombresMetodos() {
+		for(Metodo metodo : this.metodos) {
+			System.out.println(metodo.getNombre());
+		}
+	}
+	
+	// SECCIÓN GETTERS AND SETTERS
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -21,10 +35,6 @@ public class Clase {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}
-	
-	public void agregarMetodo(Metodo metodo) {
-		this.metodos.add(metodo;)
 	}
 	
 }
