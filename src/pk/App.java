@@ -64,6 +64,12 @@ public class App {
 	
 		
 		System.out.println(clase.getNombre());
-		clase.imprimirMetodos();
+		Metodo metodoPrueba = clase.getMetodos().get(0);
+		metodoPrueba.analisisMetodo();
+		System.out.println("Cantidad de líneas totales = " + metodoPrueba.getCantidadLineasTotales());
+		System.out.println("Cantidad de líneas solo codigo = " + metodoPrueba.getCantidadLinaesSoloCodigo());
+		System.out.println("Cantidad de líneas comentadas = " + metodoPrueba.getCantidaLineasComentadas());
+		System.out.println("Cantidad de líneas en blanco = " + metodoPrueba.getCantidadLineasBlanco());
+		System.out.println("porcentaje de comentarios = " + metodoPrueba.getPorcentajeComentarios());
 	}
 }

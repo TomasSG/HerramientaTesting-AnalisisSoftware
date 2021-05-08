@@ -2,7 +2,7 @@ package pk;
 
 public class Verificador {
 	
-	// Algunas palabras reservadas
+	// CONSTANTES
 	
 	// Visibilidad
 	private static final String PALABRA_PUBLIC = "public";

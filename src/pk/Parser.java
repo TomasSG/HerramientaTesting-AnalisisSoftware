@@ -2,11 +2,12 @@ package pk;
 
 public class Parser {
 	
+	// CONSTANTES
+	
 	private static final String SPERADAOR_PALABRAS = " ";
 	
 	// Elementos del lenguaje
 	private static final String PARENTESIS_ABIERTO = "(";
-	private static final String PARENTESIS_CERRADO = ")";
 	
 	public static String getNombreClase(String string) {
 		String[] palabras = string.split(SPERADAOR_PALABRAS);

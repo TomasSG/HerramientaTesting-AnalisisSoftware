@@ -32,9 +32,18 @@ public class Clase {
 		return nombre;
 	}
 
-
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+
+	public ArrayList<Metodo> getMetodos() {
+		return metodos;
+	}
+
+	public void setMetodos(ArrayList<Metodo> metodos) {
+		this.metodos = metodos;
+	}
+	
+	
 	
 }
