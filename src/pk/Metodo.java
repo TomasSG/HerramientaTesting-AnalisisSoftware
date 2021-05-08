@@ -1,6 +1,7 @@
 package pk;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Metodo {
 	
@@ -13,13 +14,38 @@ public class Metodo {
 	private static final String LINEA_VACIA = "";
 	private static final String ESPACIO = " ";
 	
-	// OPERADORES LOGICOS
-	private static final String OP_LOGICO_AND = "&&";
-	private static final String OP_LOGICO_OR = "||";
+	// OPERADORES HALSTEAD
+	private static final String OPERADOR_LOGICO_AND = "&&";
+	private static final String OPERADOR_LOGICO_OR = "||";
+	private static final String OPERADOR_LOGICO_MAYOR = ">";
+	private static final String OPERADOR_LOGICO_MAYOR_IGUAL = ">=";
+	private static final String OPERADOR_LOGICO_MENOR = "<";
+	private static final String OPERADOR_LOGICO_MENOR_IGUAL = "<=";
+	private static final String OPERADOR_LOGICO_IGUAL = "==";
+	private static final String OPERADOR_LOGICO_DISTINTO_IGUAL = "!=";
 	
-	// COMANDOS DE DECISION
-	private static final String CMD_IF = "if";
-	private static final String CMD_WHILE = "while";
+	private static final String OPERADOR_SUMA = "+";
+	private static final String OPERADOR_RESTA = "-";
+	private static final String OPERADOR_DIVISION = "/";
+	private static final String OPERADOR_MULTIPLICACION = "*";
+	private static final String OPERADOR_ASIGNACION = "=";
+	
+	private static final String OPERADOR_INT = "INT";
+	private static final String OPERADOR_FLOAT = "FLOAT";
+	private static final String OPERADOR_DOUBLE = "DOUBLE";
+	
+	private static final String OPERADOR_PUBLIC = "PUBLIC";
+	private static final String OPERADOR_STATIC = "STATIC";
+	private static final String OPERADOR_VOID = "VOID";
+	
+	private static final String OPERADOR_IF = "IF";
+	private static final String OPERADOR_WHILE = "WHILE";
+	private static final String OPERADOR_ELSE = "ELSE";
+	private static final String OPERADOR_CASE = "CASE";
+	private static final String OPERADOR_DEFAULT = "DEFAULT";
+	private static final String OPERADOR_FOR = "FOR";
+	private static final String OPERADOR_CATCH = "CATCH";
+	private static final String OPERADOR_THROW = "THROW";
 	
 	// METADATOS
 	private String nombre;
@@ -37,6 +63,8 @@ public class Metodo {
 	private int halsteadLongitud;
 	private int halsteadVolumen;
 	
+	private HashMap<String, Integer> operadores;
+	private HashMap<String, Integer> operandos;
 	
 	public Metodo(String nombre) {
 		this.nombre = nombre;
@@ -44,15 +72,19 @@ public class Metodo {
 		this.reestablecerValores();
 	}
 	
-	public void analisisMetodo() {
+	public void analizarMetodo() {
 		
 		this.reestablecerValores();
-
+		
 		// Inicialización variables que vamos a usar
 		boolean encontreComentarioMultiliena = false;
 		this.cantidadLineasTotales = this.codigo.size() + 1;
 		
 		for(String linea: this.codigo) {
+			
+			// No es lo optimo, pero es para simplificar la lógica
+			this.buscarOperadores(linea);
+			this.buscarOperandos(linea);
 			
 			if(encontreComentarioMultiliena) {
 				this.cantidaLineasComentadas++;
@@ -78,22 +110,41 @@ public class Metodo {
 			}
 			
 			if(this.esDecision(linea)) {
-				this.complejidadCiclomática += this.contarCantidadOcurrencias(linea, OP_LOGICO_AND) + 
-						this.contarCantidadOcurrencias(linea, OP_LOGICO_OR) + 1; 
+				this.complejidadCiclomática += this.contarCantidadOcurrencias(linea, OPERADOR_LOGICO_AND) + 
+						this.contarCantidadOcurrencias(linea, OPERADOR_LOGICO_OR) + 1; 
 				continue;
 				
 			}
 		}
 		
-		if(this.complejidadCiclomática != 0) {
-			// Sumamos porque V(G) = P + 1
-			this.complejidadCiclomática++;
-		}
+		// Sumamos porque V(G) = P + 1
+		this.complejidadCiclomática++;
 		
 		this.cantidadLinaesSoloCodigo = this.cantidadLineasTotales - (this.cantidadLineasBlanco + this.cantidaLineasComentadas);
+		
 		this.porcentajeComentarios = this.cantidaLineasComentadas / (double) this.cantidadLineasTotales;
 	}
 	
+	private void buscarOperadores(String linea) {
+		String[] palabras = linea.replace("(", " ( ").replace(")", " ) ").replace(",", " , ").split(ESPACIO);
+		for(String palabra : palabras) {
+		
+			if(!this.esOperadorHalstead(palabra)) {
+				continue;
+			}
+			
+			if(this.operadores.containsKey(palabra)) {
+				this.operadores.put(palabra, this.operadores.get(palabra) + 1);
+			} else {
+				this.operadores.put(palabra, 1);
+			}
+		}
+		
+	}
+	
+	private void buscarOperandos(String linea) {
+		
+	}
 	
 	private int contarCantidadOcurrencias(String linea, String palabraObj) {
 		int contador = 0;
@@ -115,9 +166,39 @@ public class Metodo {
 	}
 	
 	private boolean esDecision(String string) {
-		if(string.contains(CMD_IF) || string.contains(CMD_WHILE)) {
+		if(string.toUpperCase().contains(OPERADOR_IF) || string.toUpperCase().contains(OPERADOR_WHILE)) {
 			return true;
 		}
+		return false;
+	}
+	
+	private boolean esOperadorHalstead(String string) {
+		if(string.equals(OPERADOR_LOGICO_AND) || string.equals(OPERADOR_LOGICO_OR) || string.equals(OPERADOR_LOGICO_MAYOR) ||
+				string.equals(OPERADOR_LOGICO_MAYOR) || string.equals(OPERADOR_LOGICO_MAYOR_IGUAL) || string.equals(OPERADOR_LOGICO_MENOR) ||
+				string.equals(OPERADOR_LOGICO_MENOR_IGUAL) || string.equals(OPERADOR_LOGICO_IGUAL) || string.equals(OPERADOR_LOGICO_DISTINTO_IGUAL)) {
+			return true;
+		}
+		
+		if(string.equals(OPERADOR_SUMA) || string.equals(OPERADOR_RESTA) || string.equals(OPERADOR_DIVISION) || string.equals(OPERADOR_MULTIPLICACION) ||
+				string.equals(OPERADOR_ASIGNACION)) {
+			return true;
+		}
+		
+		if(string.toUpperCase().equals(OPERADOR_INT) || string.toUpperCase().equals(OPERADOR_FLOAT) || string.toUpperCase().equals(OPERADOR_DOUBLE)  ) {
+			return true;
+		}
+		
+		if(string.toUpperCase().equals(OPERADOR_PUBLIC) || string.toUpperCase().equals(OPERADOR_STATIC) || 
+				string.toUpperCase().equals(OPERADOR_VOID)) {
+			return true;
+		}
+		
+		if(string.toUpperCase().equals(OPERADOR_IF) || string.toUpperCase().equals(OPERADOR_WHILE) || string.toUpperCase().equals(OPERADOR_ELSE)|| 
+				string.toUpperCase().equals(OPERADOR_CASE) || string.toUpperCase().equals(OPERADOR_DEFAULT) || string.toUpperCase().equals(OPERADOR_FOR) ||
+				string.toUpperCase().equals(OPERADOR_CATCH) || string.toUpperCase().equals(OPERADOR_THROW)) {
+			return true;
+		}
+		
 		return false;
 	}
 	
@@ -132,6 +213,9 @@ public class Metodo {
 		this.fanOut = 0;
 		this.halsteadLongitud = 0;
 		this.halsteadVolumen = 0;
+		
+		this.operadores = new HashMap<>();
+		this.operandos = new HashMap<>();
 	}
 	
 	
