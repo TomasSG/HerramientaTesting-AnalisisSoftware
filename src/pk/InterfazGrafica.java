@@ -64,8 +64,6 @@ public class InterfazGrafica extends JFrame {
 	private static final String STRING_NULA = "";
 	private static final String EXTENSION_JAVA = ".java";
 	
-	private static final String PATH_ICONO_BUSCAR_DIRECTORIO = "/images/folder.png";
-	
 	private static final int VALOR_MAXIMO_COMPLEJIDAD_CICLOMATICA = 10;
 	private static final int VALOR_MINIMO_PORCENTAJE_LINEAS_COMENTADAS = 10;
 	private static final int VALOR_MAXIMO_FAN_IN = 6;
@@ -168,7 +166,6 @@ public class InterfazGrafica extends JFrame {
 
 		btnSeleccionarCarpeta = new JButton(MSJ_BT_SELECCIONAR_CARPETA);
 		btnSeleccionarCarpeta.setFont(new Font("Cambria", Font.PLAIN, 10));
-		btnSeleccionarCarpeta.setIcon(new ImageIcon(InterfazGrafica.class.getResource(PATH_ICONO_BUSCAR_DIRECTORIO)));
 		btnSeleccionarCarpeta.setBounds(10, 11, 144, 41);
 		contentPane.add(btnSeleccionarCarpeta);
 		
@@ -463,6 +460,8 @@ public class InterfazGrafica extends JFrame {
 		textFanOut.setText(STRING_NULA);
 		textHalsteadLongitud.setText(STRING_NULA);
 		textHalsteadVolumen.setText(STRING_NULA);
+		
+		textoRecomendaciones.setText(STRING_NULA);
 	}
 	
 	private void cargarMetodos(String path) {
