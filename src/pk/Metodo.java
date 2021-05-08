@@ -66,9 +66,12 @@ public class Metodo {
 	private HashMap<String, Integer> operadores;
 	private HashMap<String, Integer> operandos;
 	
-	public Metodo(String nombre) {
+	private Clase clase;
+	
+	public Metodo(String nombre, Clase clase) {
 		this.nombre = nombre;
 		this.codigo = null;
+		this.clase = clase;
 		this.reestablecerValores();
 	}
 	
@@ -78,7 +81,7 @@ public class Metodo {
 		
 		// Inicialización variables que vamos a usar
 		boolean encontreComentarioMultiliena = false;
-		this.cantidadLineasTotales = this.codigo.size() + 1;
+		this.cantidadLineasTotales = this.codigo.size();
 		
 		for(String linea: this.codigo) {
 			
@@ -137,6 +140,44 @@ public class Metodo {
 		
 		this.halsteadLongitud = N1 + N2;
 		this.halsteadVolumen = this.halsteadLongitud * (Math.log(n1 + n2) / Math.log(2));
+		
+		this.calcularFanIn();
+		this.calcularFanOut();
+	}
+
+	// Fan in: Cantidad de veces que un metodo es llamado
+	private void calcularFanIn() {
+		for(Metodo metodo : clase.getMetodos()) {
+			if(metodo.getNombre().equals(this.nombre)) {
+				continue;
+			}
+			
+			for(String linea : metodo.getCodigo()) {
+				if(linea.contains(this.nombre)) {
+					this.fanIn++;
+				}
+			}
+		}
+	}
+	
+	// Fan out: Cantidad de veces que una funcion llama a otras funciones
+	private void calcularFanOut() {
+		for(String linea : this.codigo) {
+			for(Metodo metodo : this.clase.getMetodos()) {
+				
+				if(metodo.getNombre().equals(this.nombre)) {
+					continue;
+				}
+				
+				if(metodo.getNombre().equals(this.clase.getNombre())) {
+					continue;
+				}
+				
+				if(linea.contains(metodo.getNombre())) {
+					this.fanOut++;
+				}
+			}
+		}
 	}
 	
 	private void buscarOperadoresOperandos(String linea) {

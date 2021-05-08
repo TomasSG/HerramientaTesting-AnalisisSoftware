@@ -52,7 +52,8 @@ public class App {
 			}
 			
 			if(Verificador.esEncabezadoMetodo(linea)) {
-				metodo = new Metodo(Parser.getNombreMetodo(linea));
+				metodo = new Metodo(Parser.getNombreMetodo(linea), clase);
+				codigoMetodo.add(linea);
 				
 				// Inicializamos las variables una vez que encontramos el codigo
 				encontreMetodo = true;
@@ -74,7 +75,8 @@ public class App {
 		System.out.println("Complejidad Ciclomatica = " + metodoPrueba.getComplejidadCiclomática());
 		System.out.println("Longitud Halstead = " + metodoPrueba.getHalsteadLongitud());
 		System.out.println("Volumen Halstead = " + metodoPrueba.getHalsteadVolumen());
+		System.out.println("Fan In = " + metodoPrueba.getFanIn());
+		System.out.println("Fan Out = " + metodoPrueba.getFanOut());
 		
-		System.out.println(metodoPrueba.getOperandos());
 	}
 }
