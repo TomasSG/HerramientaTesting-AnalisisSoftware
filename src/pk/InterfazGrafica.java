@@ -54,11 +54,22 @@ public class InterfazGrafica extends JFrame {
 	private static final String TITULO_CERRAR_APLICACION = "Confirmar operación";
 	private static final String MSJ_ERROR = "Ocurrió un error al realizar la tarea";
 	private static final String TITULO_ERROR = "Error";
+	private static final String MSJ_SIN_METODOS = "Parece que la clase no tiene metodos, elija otra";
+	
+	private static final String MSJ_RECOMENDACION_COMPLEJIDAD_CICLOMATICA = "La complejidad Cicclomática es mayor a 10, se recomienda modularizar\n";
+	private static final String MSJ_RECOMENDACION_PORCENTAJE_LINEAS_COMENTADAS = "El porcentaje de lineas comentadas es bajo, se recomienda agregar comentarios\n";
+	private static final String MSJ_RECOMENDACION_FAN_IN = "Este método tiene un Fan In considerable, se recomienda aplicar técnicas exhaustivas de testo\n";
+	private static final String MSJ_RECOMENDACION_FAN_OUT = "Este método tiene un Fan Out considerable, se recomienda tener en cuenta la dependencias de otros métodos\n";
 
 	private static final String STRING_NULA = "";
 	private static final String EXTENSION_JAVA = ".java";
 	
 	private static final String PATH_ICONO_BUSCAR_DIRECTORIO = "/images/folder.png";
+	
+	private static final int VALOR_MAXIMO_COMPLEJIDAD_CICLOMATICA = 10;
+	private static final int VALOR_MINIMO_PORCENTAJE_LINEAS_COMENTADAS = 10;
+	private static final int VALOR_MAXIMO_FAN_IN = 6;
+	private static final int VALOR_MAXIMO_FAN_OUT = 6;
 
 	// ELEMENTOS DE PANTALLA
 	private JTextArea textoCodigo;
@@ -398,6 +409,8 @@ public class InterfazGrafica extends JFrame {
 		
 		if(metodo != null) {
 			metodo.analizarMetodo();
+			
+			// Para escribir los valores en las casillas
 			textoCodigo.setText(metodo.toString());
 			textLineasCodigo.setText(Integer.toString(metodo.getCantidadLineasTotales()));
 			textLineasSoloCodigo.setText(Integer.toString(metodo.getCantidadLinaesSoloCodigo()));
@@ -409,6 +422,31 @@ public class InterfazGrafica extends JFrame {
 			textFanOut.setText(Integer.toString(metodo.getFanOut()));
 			textHalsteadLongitud.setText(Integer.toString(metodo.getHalsteadLongitud()));
 			textHalsteadVolumen.setText(String.format("%.02f", metodo.getHalsteadVolumen()));
+			
+			// Para dar recomendaciones
+			String msj = "";
+			
+			if(metodo.getComplejidadCiclomática() > VALOR_MAXIMO_COMPLEJIDAD_CICLOMATICA) {
+				msj += MSJ_RECOMENDACION_COMPLEJIDAD_CICLOMATICA;
+			}
+			
+			if(metodo.getPorcentajeComentarios() < VALOR_MINIMO_PORCENTAJE_LINEAS_COMENTADAS) {
+				msj += MSJ_RECOMENDACION_PORCENTAJE_LINEAS_COMENTADAS;
+			}
+			
+			if(metodo.getFanIn() > VALOR_MAXIMO_FAN_IN) {
+				msj += MSJ_RECOMENDACION_FAN_IN;
+			}
+			
+			if(metodo.getFanOut() > VALOR_MAXIMO_FAN_OUT) {
+				msj += MSJ_RECOMENDACION_FAN_OUT;
+			}
+			
+			this.textoRecomendaciones.setText(msj);
+			
+		} else {
+			JOptionPane.showConfirmDialog(null, MSJ_ERROR, TITULO_ERROR, 
+					JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
 		}
 		
 	}
@@ -431,6 +469,11 @@ public class InterfazGrafica extends JFrame {
 		
 		DefaultListModel<String> dlm = new DefaultListModel<String>();
 		this.appManager.iniciarAplicacion(path);
+		
+		if(this.appManager.getClase().getMetodos().size() == 0) {
+			JOptionPane.showConfirmDialog(null, MSJ_SIN_METODOS, TITULO_ERROR,	JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		
 		for(Metodo metodo : this.appManager.getClase().getMetodos()) {
 			dlm.addElement(metodo.getNombre());
