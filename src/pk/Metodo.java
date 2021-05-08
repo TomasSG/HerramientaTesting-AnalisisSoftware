@@ -61,7 +61,7 @@ public class Metodo {
 	private int fanIn;
 	private int fanOut;
 	private int halsteadLongitud;
-	private int halsteadVolumen;
+	private double halsteadVolumen;
 	
 	private HashMap<String, Integer> operadores;
 	private HashMap<String, Integer> operandos;
@@ -83,8 +83,7 @@ public class Metodo {
 		for(String linea: this.codigo) {
 			
 			// No es lo optimo, pero es para simplificar la lógica
-			this.buscarOperadores(linea);
-			this.buscarOperandos(linea);
+			this.buscarOperadoresOperandos(linea);
 			
 			if(encontreComentarioMultiliena) {
 				this.cantidaLineasComentadas++;
@@ -123,28 +122,44 @@ public class Metodo {
 		this.cantidadLinaesSoloCodigo = this.cantidadLineasTotales - (this.cantidadLineasBlanco + this.cantidaLineasComentadas);
 		
 		this.porcentajeComentarios = this.cantidaLineasComentadas / (double) this.cantidadLineasTotales;
+		
+		// Calculos relacionados con hasltead
+		int n1 = this.operadores.keySet().size();
+		int N1 = 0;
+		for(Integer valor : operadores.values()) {
+			N1 += valor;
+		}
+		int n2 = this.operandos.keySet().size();
+		int N2 = 0;
+		for(Integer valor : operandos.values()) {
+			N2 += valor;
+		}
+		
+		this.halsteadLongitud = N1 + N2;
+		this.halsteadVolumen = this.halsteadLongitud * (Math.log(n1 + n2) / Math.log(2));
 	}
 	
-	private void buscarOperadores(String linea) {
+	private void buscarOperadoresOperandos(String linea) {
 		String[] palabras = linea.replace("(", " ( ").replace(")", " ) ").replace(",", " , ").split(ESPACIO);
 		for(String palabra : palabras) {
 		
-			if(!this.esOperadorHalstead(palabra)) {
-				continue;
-			}
-			
-			if(this.operadores.containsKey(palabra)) {
-				this.operadores.put(palabra, this.operadores.get(palabra) + 1);
+			if(this.esOperadorHalstead(palabra)) {
+				
+				if(this.operadores.containsKey(palabra)) {
+					this.operadores.put(palabra, this.operadores.get(palabra) + 1);
+				} else {
+					this.operadores.put(palabra, 1);
+				}			
 			} else {
-				this.operadores.put(palabra, 1);
+				if(this.operandos.containsKey(palabra)) {
+					this.operandos.put(palabra, this.operandos.get(palabra) + 1);
+				} else {
+					this.operandos.put(palabra, 1);
+				}
 			}
 		}
-		
 	}
 	
-	private void buscarOperandos(String linea) {
-		
-	}
 	
 	private int contarCantidadOcurrencias(String linea, String palabraObj) {
 		int contador = 0;
@@ -319,7 +334,7 @@ public class Metodo {
 		this.halsteadLongitud = halsteadLongitud;
 	}
 
-	public int getHalsteadVolumen() {
+	public double getHalsteadVolumen() {
 		return halsteadVolumen;
 	}
 
@@ -327,9 +342,29 @@ public class Metodo {
 		this.halsteadVolumen = halsteadVolumen;
 	}
 
-	
-	
-	
-	
+	public HashMap<String, Integer> getOperadores() {
+		return operadores;
+	}
+
+	public void setOperadores(HashMap<String, Integer> operadores) {
+		this.operadores = operadores;
+	}
+
+	public HashMap<String, Integer> getOperandos() {
+		return operandos;
+	}
+
+	public void setOperandos(HashMap<String, Integer> operandos) {
+		this.operandos = operandos;
+	}
+
+	public void setPorcentajeComentarios(double porcentajeComentarios) {
+		this.porcentajeComentarios = porcentajeComentarios;
+	}
+
+	public void setHalsteadVolumen(double halsteadVolumen) {
+		this.halsteadVolumen = halsteadVolumen;
+	}
+
 	
 }

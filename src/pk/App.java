@@ -65,12 +65,16 @@ public class App {
 		
 		System.out.println("Clase: " + clase.getNombre() + " Metodo: " + clase.getMetodos().get(0).getNombre());
 		Metodo metodoPrueba = clase.getMetodos().get(0);
-		metodoPrueba.analisisMetodo();
+		metodoPrueba.analizarMetodo();
 		System.out.println("Cantidad de líneas totales = " + metodoPrueba.getCantidadLineasTotales());
 		System.out.println("Cantidad de líneas solo codigo = " + metodoPrueba.getCantidadLinaesSoloCodigo());
 		System.out.println("Cantidad de líneas comentadas = " + metodoPrueba.getCantidaLineasComentadas());
 		System.out.println("Cantidad de líneas en blanco = " + metodoPrueba.getCantidadLineasBlanco());
 		System.out.println("porcentaje de comentarios = " + metodoPrueba.getPorcentajeComentarios());
 		System.out.println("Complejidad Ciclomatica = " + metodoPrueba.getComplejidadCiclomática());
+		System.out.println("Longitud Halstead = " + metodoPrueba.getHalsteadLongitud());
+		System.out.println("Volumen Halstead = " + metodoPrueba.getHalsteadVolumen());
+		
+		System.out.println(metodoPrueba.getOperandos());
 	}
 }
