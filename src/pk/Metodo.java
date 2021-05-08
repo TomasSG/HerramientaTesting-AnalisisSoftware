@@ -124,7 +124,7 @@ public class Metodo {
 		
 		this.cantidadLinaesSoloCodigo = this.cantidadLineasTotales - (this.cantidadLineasBlanco + this.cantidaLineasComentadas);
 		
-		this.porcentajeComentarios = this.cantidaLineasComentadas / (double) this.cantidadLineasTotales;
+		this.porcentajeComentarios = 100 * this.cantidaLineasComentadas / (double) this.cantidadLineasTotales;
 		
 		// Calculos relacionados con hasltead
 		int n1 = this.operadores.keySet().size();

@@ -39,6 +39,10 @@ public class InterfazGrafica extends JFrame {
 	private static final String MSJ_LABEL_FAN_OUT = "Fan out";
 	private static final String MSJ_LABEL_HALSTEAD_LONGITUD = "Halstead - longitud";
 	private static final String MSJ_LABEL_HALSTEAD_VOLUMEN = "Halstead - volumen";
+	private static final String MSJ_LABEL_LISTA_ARCHIVOS = "Archivos Disponibles";
+	private static final String MSJ_LABEL_LISTA_METODOS = "Metodos Disponibles";
+	
+	private static final String MSJ_BT_SELECCIONAR_CARPETA = "Seleccionar carpeta";
 
 	private static final String STRING_NULA = "";
 	private static final String EXTENSION_JAVA = ".java";
@@ -51,6 +55,16 @@ public class InterfazGrafica extends JFrame {
 	private JLabel lblMetodos;
 	private JLabel lblArchivos;
 	private JPanel contentPane;
+	private JTextField textLineasCodigo;
+	private JTextField textLineasSoloCodigo;
+	private JTextField textLineasComentadas;
+	private JTextField textLineasBlanco;
+	private JTextField textPorcentajeComentarios;
+	private JTextField textHalsteadVolumen;
+	private JTextField textHalsteadLongitud;
+	private JTextField textFanIn;
+	private JTextField textFanOut;
+	private JTextField textComplejidadCiclomatica;
 	
 	private JScrollPane scrollListaArchivos;
 	private JScrollPane scrollListaMetodos;
@@ -59,16 +73,7 @@ public class InterfazGrafica extends JFrame {
 	// ELEMENTOS DE LA LOGICA
 	private AppManager appManager;
 	private Metodo metodo;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private JTextField textField_8;
-	private JTextField textField_9;
+	
 
 	/**
 	 * Launch the application.
@@ -111,11 +116,11 @@ public class InterfazGrafica extends JFrame {
 		listaArchivos.setBounds(164, 47, 486, 107);
 
 
-		lblArchivos = new JLabel("Archivos Disponibles");
+		lblArchivos = new JLabel(MSJ_LABEL_LISTA_ARCHIVOS);
 		lblArchivos.setHorizontalAlignment(SwingConstants.CENTER);
 		lblArchivos.setBounds(164, 15, 485, 60);
 
-		lblMetodos = new JLabel("M\u00E9todos Disponibles");
+		lblMetodos = new JLabel(MSJ_LABEL_LISTA_METODOS);
 		lblMetodos.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMetodos.setBounds(674, 15, 261, 25);
 
@@ -124,7 +129,7 @@ public class InterfazGrafica extends JFrame {
 
 		setTitle(TITULO);
 
-		btnSeleccionarCarpeta = new JButton("Seleccionar carpeta");
+		btnSeleccionarCarpeta = new JButton(MSJ_BT_SELECCIONAR_CARPETA);
 		btnSeleccionarCarpeta.setFont(new Font("Tahoma", Font.PLAIN, 9));
 
 		btnSeleccionarCarpeta.setBounds(10, 35, 144, 41);
@@ -149,95 +154,125 @@ public class InterfazGrafica extends JFrame {
 		contentPane.add(scrollTextoCodigo);
 		scrollTextoCodigo.setViewportView(textoCodigo);
 		
-		textField = new JTextField();
-		textField.setBounds(10, 373, 124, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		textLineasCodigo = new JTextField();
+		textLineasCodigo.setHorizontalAlignment(SwingConstants.CENTER);
+		textLineasCodigo.setBounds(10, 373, 124, 20);
+		contentPane.add(textLineasCodigo);
+		textLineasCodigo.setColumns(10);
 		
 		JLabel lblLineasCodigo = new JLabel(MSJ_LABEL_LINEAS_TOTALES_CODIGO);
+		lblLineasCodigo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLineasCodigo.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblLineasCodigo.setBounds(10, 342, 124, 14);
 		contentPane.add(lblLineasCodigo);
 		
 		JLabel lblLineasSoloCodigo = new JLabel(MSJ_LABEL_LINEAS_SOLO_CODIGO);
+		lblLineasSoloCodigo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLineasSoloCodigo.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblLineasSoloCodigo.setBounds(180, 342, 165, 14);
 		contentPane.add(lblLineasSoloCodigo);
 		
 		JLabel lblLineasComentadas = new JLabel(MSJ_LABEL_LINEAS_COMENTADAS);
+		lblLineasComentadas.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLineasComentadas.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblLineasComentadas.setBounds(384, 342, 165, 14);
 		contentPane.add(lblLineasComentadas);
 		
 		JLabel lblLineasBlanco = new JLabel(MSJ_LABEL_LINEAS_EN_BLANCO);
+		lblLineasBlanco.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLineasBlanco.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblLineasBlanco.setBounds(607, 342, 153, 14);
 		contentPane.add(lblLineasBlanco);
 		
 		JLabel lblPorcentajeComentarios = new JLabel(MSJ_LABEL_PORCENTAJE_DE_COMENTARIOS);
+		lblPorcentajeComentarios.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPorcentajeComentarios.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblPorcentajeComentarios.setBounds(774, 342, 153, 14);
 		contentPane.add(lblPorcentajeComentarios);
 		
 		JLabel lblComplejidadCiclomatica = new JLabel(MSJ_LABEL_COMPLEJIDAD_CICLOMATICA);
+		lblComplejidadCiclomatica.setHorizontalAlignment(SwingConstants.CENTER);
+		lblComplejidadCiclomatica.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblComplejidadCiclomatica.setBounds(14, 424, 117, 14);
 		contentPane.add(lblComplejidadCiclomatica);
 		
 		JLabel lblFanIn = new JLabel(MSJ_LABEL_FAN_IN);
+		lblFanIn.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFanIn.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblFanIn.setBounds(443, 424, 46, 14);
 		contentPane.add(lblFanIn);
 		
 		JLabel lblFanOut = new JLabel(MSJ_LABEL_FAN_OUT);
+		lblFanOut.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFanOut.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblFanOut.setBounds(239, 424, 46, 14);
 		contentPane.add(lblFanOut);
 
 		JLabel lblHalsteadLongitud = new JLabel(MSJ_LABEL_HALSTEAD_LONGITUD);
+		lblHalsteadLongitud.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHalsteadLongitud.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblHalsteadLongitud.setBounds(630, 424, 107, 14);
 		contentPane.add(lblHalsteadLongitud);
 		
 		JLabel lblHalsteadVolumen = new JLabel(MSJ_LABEL_HALSTEAD_VOLUMEN);
+		lblHalsteadVolumen.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHalsteadVolumen.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblHalsteadVolumen.setBounds(797, 424, 107, 14);
 		contentPane.add(lblHalsteadVolumen);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(200, 373, 124, 20);
-		contentPane.add(textField_1);
+		textLineasSoloCodigo = new JTextField();
+		textLineasSoloCodigo.setHorizontalAlignment(SwingConstants.CENTER);
+		textLineasSoloCodigo.setColumns(10);
+		textLineasSoloCodigo.setBounds(200, 373, 124, 20);
+		contentPane.add(textLineasSoloCodigo);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(404, 373, 124, 20);
-		contentPane.add(textField_2);
+		textLineasComentadas = new JTextField();
+		textLineasComentadas.setHorizontalAlignment(SwingConstants.CENTER);
+		textLineasComentadas.setColumns(10);
+		textLineasComentadas.setBounds(404, 373, 124, 20);
+		contentPane.add(textLineasComentadas);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(621, 373, 124, 20);
-		contentPane.add(textField_3);
+		textLineasBlanco = new JTextField();
+		textLineasBlanco.setHorizontalAlignment(SwingConstants.CENTER);
+		textLineasBlanco.setColumns(10);
+		textLineasBlanco.setBounds(621, 373, 124, 20);
+		contentPane.add(textLineasBlanco);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(788, 373, 124, 20);
-		contentPane.add(textField_4);
+		textPorcentajeComentarios = new JTextField();
+		textPorcentajeComentarios.setHorizontalAlignment(SwingConstants.CENTER);
+		textPorcentajeComentarios.setColumns(10);
+		textPorcentajeComentarios.setBounds(788, 373, 124, 20);
+		contentPane.add(textPorcentajeComentarios);
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(788, 449, 124, 20);
-		contentPane.add(textField_5);
+		textHalsteadVolumen = new JTextField();
+		textHalsteadVolumen.setHorizontalAlignment(SwingConstants.CENTER);
+		textHalsteadVolumen.setColumns(10);
+		textHalsteadVolumen.setBounds(788, 449, 124, 20);
+		contentPane.add(textHalsteadVolumen);
 		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(621, 449, 124, 20);
-		contentPane.add(textField_6);
+		textHalsteadLongitud = new JTextField();
+		textHalsteadLongitud.setHorizontalAlignment(SwingConstants.CENTER);
+		textHalsteadLongitud.setColumns(10);
+		textHalsteadLongitud.setBounds(621, 449, 124, 20);
+		contentPane.add(textHalsteadLongitud);
 		
-		textField_7 = new JTextField();
-		textField_7.setColumns(10);
-		textField_7.setBounds(404, 449, 124, 20);
-		contentPane.add(textField_7);
+		textFanIn = new JTextField();
+		textFanIn.setHorizontalAlignment(SwingConstants.CENTER);
+		textFanIn.setColumns(10);
+		textFanIn.setBounds(404, 449, 124, 20);
+		contentPane.add(textFanIn);
 		
-		textField_8 = new JTextField();
-		textField_8.setColumns(10);
-		textField_8.setBounds(200, 449, 124, 20);
-		contentPane.add(textField_8);
+		textFanOut = new JTextField();
+		textFanOut.setHorizontalAlignment(SwingConstants.CENTER);
+		textFanOut.setColumns(10);
+		textFanOut.setBounds(200, 449, 124, 20);
+		contentPane.add(textFanOut);
 		
-		textField_9 = new JTextField();
-		textField_9.setColumns(10);
-		textField_9.setBounds(10, 449, 124, 20);
-		contentPane.add(textField_9);
+		textComplejidadCiclomatica = new JTextField();
+		textComplejidadCiclomatica.setHorizontalAlignment(SwingConstants.CENTER);
+		textComplejidadCiclomatica.setColumns(10);
+		textComplejidadCiclomatica.setBounds(10, 449, 124, 20);
+		contentPane.add(textComplejidadCiclomatica);
 		
 		
 		btnSeleccionarCarpeta.addActionListener(new ActionListener() {
@@ -266,18 +301,29 @@ public class InterfazGrafica extends JFrame {
 				String nombreMetodo = listaMetodos.getSelectedValue();
 				
 				if(nombreMetodo != null) {
-					cargarCodigo(nombreMetodo);
+					analizarMetodo(nombreMetodo);
 				}
 				
 			}
 		});
 	}
 	
-	private void cargarCodigo(String nombreMetodo) {
+	private void analizarMetodo(String nombreMetodo) {
 		Metodo metodo = appManager.getClase().buscarMetodo(nombreMetodo);
 		
 		if(metodo != null) {
+			metodo.analizarMetodo();
 			textoCodigo.setText(metodo.toString());
+			textLineasCodigo.setText(Integer.toString(metodo.getCantidadLineasTotales()));
+			textLineasSoloCodigo.setText(Integer.toString(metodo.getCantidadLinaesSoloCodigo()));
+			textLineasComentadas.setText(Integer.toString(metodo.getCantidaLineasComentadas()));
+			textLineasBlanco.setText(Integer.toString(metodo.getCantidadLineasBlanco()));
+			textPorcentajeComentarios.setText(String.format("%.02f", metodo.getPorcentajeComentarios()));
+			textComplejidadCiclomatica.setText(Integer.toString(metodo.getComplejidadCiclomática()));
+			textFanIn.setText(Integer.toString(metodo.getFanIn()));
+			textFanOut.setText(Integer.toString(metodo.getFanOut()));
+			textHalsteadLongitud.setText(Integer.toString(metodo.getHalsteadLongitud()));
+			textHalsteadVolumen.setText(String.format("%.02f", metodo.getHalsteadVolumen()));
 		}
 		
 	}
