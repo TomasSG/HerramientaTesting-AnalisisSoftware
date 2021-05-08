@@ -1,10 +1,12 @@
 package pk;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -39,6 +41,10 @@ public class InterfazGrafica extends JFrame {
 	private JLabel lblMetodos;
 	private JLabel lblArchivos;
 	private JPanel contentPane;
+	
+	private JScrollPane scrollListaArchivos;
+	private JScrollPane scrollListaMetodos;
+	private JScrollPane scrollTextoCodigo;
 	
 	// ELEMENTOS DE LA LOGICA
 	private AppManager appManager;
@@ -80,26 +86,21 @@ public class InterfazGrafica extends JFrame {
 		textoCodigo.setEditable(false);
 		textoCodigo.setLineWrap(true);
 		textoCodigo.setText(STRING_NULA);
-		contentPane.add(textoCodigo);
 
 		listaArchivos = new JList<File>();
 		listaArchivos.setBounds(164, 47, 486, 107);
 
-		contentPane.add(listaArchivos);
 
 		lblArchivos = new JLabel("Archivos Disponibles");
 		lblArchivos.setHorizontalAlignment(SwingConstants.CENTER);
-		lblArchivos.setBounds(164, 15, 485, 25);
-		contentPane.add(lblArchivos);
+		lblArchivos.setBounds(164, 15, 485, 60);
 
 		lblMetodos = new JLabel("M\u00E9todos Disponibles");
 		lblMetodos.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMetodos.setBounds(674, 15, 261, 25);
-		contentPane.add(lblMetodos);
 
 		listaMetodos = new JList<String>();
 		listaMetodos.setBounds(675, 45, 261, 107);
-		contentPane.add(listaMetodos);
 
 		setTitle(TITULO);
 
@@ -108,6 +109,27 @@ public class InterfazGrafica extends JFrame {
 
 		btnSeleccionarCarpeta.setBounds(10, 35, 144, 41);
 		contentPane.add(btnSeleccionarCarpeta);
+		
+		scrollListaArchivos = new JScrollPane();
+		scrollListaArchivos.setBounds(listaArchivos.getBounds());
+		contentPane.add(scrollListaArchivos);
+		scrollListaArchivos.setViewportView(listaArchivos);
+		scrollListaArchivos.setColumnHeaderView(lblArchivos);
+		scrollListaArchivos.setVisible(true);
+		
+		scrollListaMetodos = new JScrollPane();
+		scrollListaMetodos.setBounds(listaMetodos.getBounds());
+		contentPane.add(scrollListaMetodos);
+		scrollListaMetodos.setViewportView(listaMetodos);
+		scrollListaMetodos.setColumnHeaderView(lblMetodos);
+		scrollListaMetodos.setVisible(true);
+		
+		scrollTextoCodigo = new JScrollPane();
+		scrollTextoCodigo.setBounds(textoCodigo.getBounds());
+		contentPane.add(scrollTextoCodigo);
+		scrollTextoCodigo.setViewportView(textoCodigo);
+		scrollTextoCodigo.setVisible(true);
+		
 		
 		btnSeleccionarCarpeta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
