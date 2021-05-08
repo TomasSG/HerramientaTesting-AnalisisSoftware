@@ -11,13 +11,21 @@ public class Metodo {
 	
 	private static final String SALTO_LINEA = "\n";
 	private static final String LINEA_VACIA = "";
-	private static final String LINEA_BLANCO = " ";
+	private static final String ESPACIO = " ";
 	
-	// Metadatos del metodo
+	// OPERADORES LOGICOS
+	private static final String OP_LOGICO_AND = "&&";
+	private static final String OP_LOGICO_OR = "||";
+	
+	// COMANDOS DE DECISION
+	private static final String CMD_IF = "if";
+	private static final String CMD_WHILE = "while";
+	
+	// METADATOS
 	private String nombre;
 	private ArrayList<String> codigo;
 	
-	// Valores a calcular
+	// METRICAS
 	private int cantidadLineasTotales;
 	private int cantidadLinaesSoloCodigo;
 	private int cantidaLineasComentadas;
@@ -42,7 +50,6 @@ public class Metodo {
 
 		// Inicialización variables que vamos a usar
 		boolean encontreComentarioMultiliena = false;
-		// Sumamos uno porque tomamos el propio encabezado como una linea más de codigo
 		this.cantidadLineasTotales = this.codigo.size() + 1;
 		
 		for(String linea: this.codigo) {
@@ -70,15 +77,45 @@ public class Metodo {
 				continue;
 			}
 			
+			if(this.esDecision(linea)) {
+				this.complejidadCiclomática += this.contarCantidadOcurrencias(linea, OP_LOGICO_AND) + 
+						this.contarCantidadOcurrencias(linea, OP_LOGICO_OR) + 1; 
+				continue;
+				
+			}
 		}
 		
+		if(this.complejidadCiclomática != 0) {
+			// Sumamos porque V(G) = P + 1
+			this.complejidadCiclomática++;
+		}
 		
 		this.cantidadLinaesSoloCodigo = this.cantidadLineasTotales - (this.cantidadLineasBlanco + this.cantidaLineasComentadas);
 		this.porcentajeComentarios = this.cantidaLineasComentadas / (double) this.cantidadLineasTotales;
 	}
 	
+	
+	private int contarCantidadOcurrencias(String linea, String palabraObj) {
+		int contador = 0;
+		String[] palabras = linea.split(ESPACIO);
+		
+		for(int i = 0; i < palabras.length; i++) {
+			if(palabraObj.equals(palabras[i])) {
+				contador++;
+			}
+		}
+		return contador;
+	}
+	
 	private boolean esLineaEnBlanco(String string) {
-		if(string.equals(LINEA_BLANCO) || string.equals(LINEA_VACIA) || string.equals(SALTO_LINEA)) {
+		if(string.equals(ESPACIO) || string.equals(LINEA_VACIA) || string.equals(SALTO_LINEA)) {
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean esDecision(String string) {
+		if(string.contains(CMD_IF) || string.contains(CMD_WHILE)) {
 			return true;
 		}
 		return false;
