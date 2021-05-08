@@ -16,6 +16,10 @@ public class Verificador {
 	private static final String PALABRA_CLASE = "class";
 	
 	
+	/*
+	 * Tomamos que todos los encabezados de la clase son los que tienen la palabra "class"
+	 */
+	
 	public static boolean esEncabezadoClase(String string) {
 		if(string.contains(PALABRA_CLASE)) {
 			return true;
@@ -23,6 +27,11 @@ public class Verificador {
 		
 		return false;
 	}
+	
+	/*
+	 * Tomamos que todos los encabezados de métodos tienen una palabra de visibilidad y los paréntesis
+	 * abiertos y cerrados.
+	 */
 	
 	public static boolean esEncabezadoMetodo(String string) {
 		if(Verificador.contieneVisibilidad(string) && Verificador.contieneParentesisCerradosAbiertos(string)) {

@@ -20,7 +20,7 @@ public class Parser {
 		for(String palabra : palabras) { 
 			if(palabra.contains(PARENTESIS_ABIERTO)) {
 				
-				// Aca encontramos algo como Triangulo(), obtenemos el nombre dle metodo nada mas
+				// Aca encontramos algo como Triangulo(), nos quedamos con el nombre nada más
 				return palabra.substring(0, palabra.indexOf(PARENTESIS_ABIERTO));
 			}
 		}

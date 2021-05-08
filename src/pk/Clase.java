@@ -20,9 +20,9 @@ public class Clase {
 		this.metodos.add(metodo);
 	}
 	
-	public void imprimirNombresMetodos() {
+	public void imprimirMetodos() {
 		for(Metodo metodo : this.metodos) {
-			System.out.println(metodo.getNombre());
+			System.out.println(metodo);
 		}
 	}
 	
