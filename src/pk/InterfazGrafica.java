@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -18,6 +20,7 @@ import javax.swing.JTextArea;
 import javax.swing.JList;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import java.awt.Font;
 
 public class InterfazGrafica extends JFrame {
 
@@ -29,14 +32,17 @@ public class InterfazGrafica extends JFrame {
 	private static final String EXTENSION_JAVA = ".java";
 
 	// ELEMENTOS DE PANTALLA
-	private JTextArea textCodigo;
-	private JList<String> listaArchivos;
+	private JTextArea textoCodigo;
+	private JList<File> listaArchivos;
 	private JList<String> listaMetodos;
 	private JButton btnSeleccionarCarpeta;
 	private JLabel lblMetodos;
 	private JLabel lblArchivos;
-
 	private JPanel contentPane;
+	
+	// ELEMENTOS DE LA LOGICA
+	private AppManager appManager;
+	private Metodo metodo;
 
 	/**
 	 * Launch the application.
@@ -58,6 +64,10 @@ public class InterfazGrafica extends JFrame {
 	 * Create the frame.
 	 */
 	public InterfazGrafica() {
+		
+		this.appManager = new AppManager();
+		this.metodo = null;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 958, 569);
 		contentPane = new JPanel();
@@ -65,43 +75,91 @@ public class InterfazGrafica extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		textCodigo = new JTextArea();
-		textCodigo.setBounds(61, 190, 749, 107);
-		textCodigo.setEditable(false);
-		textCodigo.setLineWrap(true);
-		textCodigo.setText(STRING_NULA);
-		contentPane.add(textCodigo);
+		textoCodigo = new JTextArea();
+		textoCodigo.setBounds(10, 190, 925, 107);
+		textoCodigo.setEditable(false);
+		textoCodigo.setLineWrap(true);
+		textoCodigo.setText(STRING_NULA);
+		contentPane.add(textoCodigo);
 
-		listaArchivos = new JList<String>();
-		listaArchivos.setBounds(232, 47, 261, 107);
+		listaArchivos = new JList<File>();
+		listaArchivos.setBounds(164, 47, 486, 107);
 
 		contentPane.add(listaArchivos);
 
 		lblArchivos = new JLabel("Archivos Disponibles");
 		lblArchivos.setHorizontalAlignment(SwingConstants.CENTER);
-		lblArchivos.setBounds(232, 11, 261, 25);
+		lblArchivos.setBounds(164, 15, 485, 25);
 		contentPane.add(lblArchivos);
 
 		lblMetodos = new JLabel("M\u00E9todos Disponibles");
 		lblMetodos.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMetodos.setBounds(584, 11, 261, 25);
+		lblMetodos.setBounds(674, 15, 261, 25);
 		contentPane.add(lblMetodos);
 
 		listaMetodos = new JList<String>();
-		listaMetodos.setBounds(584, 47, 261, 107);
+		listaMetodos.setBounds(675, 45, 261, 107);
 		contentPane.add(listaMetodos);
 
 		setTitle(TITULO);
 
 		btnSeleccionarCarpeta = new JButton("Seleccionar carpeta");
+		btnSeleccionarCarpeta.setFont(new Font("Tahoma", Font.PLAIN, 9));
 
-		btnSeleccionarCarpeta.setBounds(10, 11, 144, 41);
+		btnSeleccionarCarpeta.setBounds(10, 35, 144, 41);
 		contentPane.add(btnSeleccionarCarpeta);
+		
 		btnSeleccionarCarpeta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buscarCarpeta();
 			}
 		});
+		
+		this.listaArchivos.addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				File archivo = listaArchivos.getSelectedValue();
+				
+				if(archivo != null) {
+					cargarMetodos(archivo.toString());
+				}
+				
+			}
+		});
+		
+		this.listaMetodos.addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				String nombreMetodo = listaMetodos.getSelectedValue();
+				
+				if(nombreMetodo != null) {
+					cargarCodigo(nombreMetodo);
+				}
+				
+			}
+		});
+	}
+	
+	private void cargarCodigo(String nombreMetodo) {
+		Metodo metodo = appManager.getClase().buscarMetodo(nombreMetodo);
+		
+		if(metodo != null) {
+			textoCodigo.setText(metodo.toString());
+		}
+		
+	}
+	
+	private void cargarMetodos(String path) {
+		
+		DefaultListModel<String> dlm = new DefaultListModel<String>();
+		this.appManager.iniciarAplicacion(path);
+		
+		for(Metodo metodo : this.appManager.getClase().getMetodos()) {
+			dlm.addElement(metodo.getNombre());
+		}
+		this.listaMetodos.setModel(dlm);
 	}
 
 	private void buscarCarpeta() {
@@ -116,10 +174,10 @@ public class InterfazGrafica extends JFrame {
 	}
 
 	private void cargarArchivos(File directorio) {
-		DefaultListModel<String> dlm = new DefaultListModel<String>();
+		DefaultListModel<File> dlm = new DefaultListModel<File>();
 		for (File archivo : directorio.listFiles(new FiltroJava())) {
 			if (!archivo.isDirectory()) {
-				dlm.addElement(archivo.getName());
+				dlm.addElement(archivo);
 			}
 			this.listaArchivos.setModel(dlm);
 		}

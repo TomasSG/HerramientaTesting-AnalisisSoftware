@@ -13,11 +13,18 @@ public class Clase {
 		this.nombre = nombre;
 	}
 
-
-
 	
 	public void agregarMetodo(Metodo metodo) {
 		this.metodos.add(metodo);
+	}
+	
+	public Metodo buscarMetodo(String nombre) {
+		for(Metodo metodo : this.metodos) {
+			if(metodo.getNombre().equals(nombre)) {
+				return metodo;
+			}
+		}
+		return null;
 	}
 	
 	public void imprimirMetodos() {

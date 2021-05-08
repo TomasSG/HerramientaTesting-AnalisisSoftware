@@ -277,7 +277,7 @@ public class Metodo {
 	
 	@Override
 	public String toString() {
-		String resultado = "Nombre Método = " + this.nombre;
+		String resultado = "";
 		for(String linea : this.codigo) {
 			resultado += "\n " + linea;
 		}
