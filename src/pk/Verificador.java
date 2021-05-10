@@ -1,19 +1,8 @@
 package pk;
 
 public class Verificador {
+
 	
-	// CONSTANTES
-	
-	// Visibilidad
-	private static final String PALABRA_PUBLIC = "public";
-	private static final String PALABRA_PRIVATE = "private";
-	private static final String PALABRA_PROTECTED = "protected";
-	
-	// Elementos del lenguaje
-	private static final String PARENTESIS_ABIERTO = "(";
-	private static final String PARENTESIS_CERRADO = ")";
-	
-	private static final String PALABRA_CLASE = "class";
 	
 	
 	/*
@@ -21,7 +10,7 @@ public class Verificador {
 	 */
 	
 	public static boolean esEncabezadoClase(String string) {
-		if(string.contains(PALABRA_CLASE)) {
+		if(string.contains(Constantes.PALABRA_CLASE)) {
 			return true;
 		}
 		
@@ -41,17 +30,68 @@ public class Verificador {
 		return false;
 	}
 	
-	private static boolean contieneVisibilidad(String string) {
-		if(string.contains(PALABRA_PRIVATE) || string.contains(PALABRA_PUBLIC) || string.contains(PALABRA_PROTECTED)) {
+	public static boolean contieneVisibilidad(String string) {
+		if(string.contains(Constantes.PALABRA_PRIVATE) || string.contains(Constantes.PALABRA_PUBLIC) || 
+				string.contains(Constantes.PALABRA_PROTECTED)) {
 			return true;
 		}
 		return false;
 	}
 	
-	private static boolean contieneParentesisCerradosAbiertos(String string) {
-		if(string.contains(PARENTESIS_ABIERTO) && string.contains(PARENTESIS_CERRADO)) {
+	public static boolean contieneParentesisCerradosAbiertos(String string) {
+		if(string.contains(Constantes.PARENTESIS_ABIERTO) && string.contains(Constantes.PARENTESIS_CERRADO)) {
 			return true;
 		}
+		return false;
+	}
+	
+	public static boolean esLineaEnBlanco(String string) {
+		if(string.equals(Constantes.ESPACIO) || string.equals(Constantes.LINEA_VACIA) || string.equals(Constantes.SALTO_LINEA)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean esDecision(String string) {
+		if(string.toUpperCase().contains(Constantes.OPERADOR_IF) || string.toUpperCase().contains(Constantes.OPERADOR_WHILE)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean esOperadorHalstead(String string) {
+		if(string.equals(Constantes.OPERADOR_LOGICO_AND) || string.equals(Constantes.OPERADOR_LOGICO_OR) || 
+				string.equals(Constantes.OPERADOR_LOGICO_MAYOR) ||	string.equals(Constantes.OPERADOR_LOGICO_MAYOR) || 
+				string.equals(Constantes.OPERADOR_LOGICO_MAYOR_IGUAL) || string.equals(Constantes.OPERADOR_LOGICO_MENOR) ||
+				string.equals(Constantes.OPERADOR_LOGICO_MENOR_IGUAL) || string.equals(Constantes.OPERADOR_LOGICO_IGUAL) || 
+				string.equals(Constantes.OPERADOR_LOGICO_DISTINTO_IGUAL)) {
+			return true;
+		}
+		
+		if(string.equals(Constantes.OPERADOR_SUMA) || string.equals(Constantes.OPERADOR_RESTA) ||
+				string.equals(Constantes.OPERADOR_DIVISION) || string.equals(Constantes.OPERADOR_MULTIPLICACION) ||
+				string.equals(Constantes.OPERADOR_ASIGNACION)) {
+			return true;
+		}
+		
+		if(string.toUpperCase().equals(Constantes.OPERADOR_INT) || 
+				string.toUpperCase().equals(Constantes.OPERADOR_FLOAT) || 
+				string.toUpperCase().equals(Constantes.OPERADOR_DOUBLE)  ) {
+			return true;
+		}
+		
+		if(string.toUpperCase().equals(Constantes.OPERADOR_PUBLIC) || string.toUpperCase().equals(Constantes.OPERADOR_STATIC) || 
+				string.toUpperCase().equals(Constantes.OPERADOR_VOID)) {
+			return true;
+		}
+		
+		if(string.toUpperCase().equals(Constantes.OPERADOR_IF) || string.toUpperCase().equals(Constantes.OPERADOR_WHILE) || 
+				string.toUpperCase().equals(Constantes.OPERADOR_ELSE)|| string.toUpperCase().equals(Constantes.OPERADOR_CASE) || 
+				string.toUpperCase().equals(Constantes.OPERADOR_DEFAULT) || string.toUpperCase().equals(Constantes.OPERADOR_FOR) ||
+				string.toUpperCase().equals(Constantes.OPERADOR_CATCH) || string.toUpperCase().equals(Constantes.OPERADOR_THROW)) {
+			return true;
+		}
+		
 		return false;
 	}
 

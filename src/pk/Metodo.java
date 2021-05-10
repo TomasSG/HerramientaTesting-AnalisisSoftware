@@ -5,49 +5,7 @@ import java.util.HashMap;
 
 public class Metodo {
 	
-	// CONSTANTES
-	private static final String INICIO_COMENTARIO_UNA_LINEA = "//";
-	private static final String INICIO_COMENTARIO_MULTI_LINEA = "/*";
-	private static final String CIERRE_COMENTARIO_MULTI_LINEA = "*/";
-	
-	private static final String SALTO_LINEA = "\n";
-	private static final String LINEA_VACIA = "";
-	private static final String ESPACIO = " ";
-	
-	// OPERADORES HALSTEAD
-	private static final String OPERADOR_LOGICO_AND = "&&";
-	private static final String OPERADOR_LOGICO_OR = "||";
-	private static final String OPERADOR_LOGICO_MAYOR = ">";
-	private static final String OPERADOR_LOGICO_MAYOR_IGUAL = ">=";
-	private static final String OPERADOR_LOGICO_MENOR = "<";
-	private static final String OPERADOR_LOGICO_MENOR_IGUAL = "<=";
-	private static final String OPERADOR_LOGICO_IGUAL = "==";
-	private static final String OPERADOR_LOGICO_DISTINTO_IGUAL = "!=";
-	
-	private static final String OPERADOR_SUMA = "+";
-	private static final String OPERADOR_RESTA = "-";
-	private static final String OPERADOR_DIVISION = "/";
-	private static final String OPERADOR_MULTIPLICACION = "*";
-	private static final String OPERADOR_ASIGNACION = "=";
-	
-	private static final String OPERADOR_INT = "INT";
-	private static final String OPERADOR_FLOAT = "FLOAT";
-	private static final String OPERADOR_DOUBLE = "DOUBLE";
-	
-	private static final String OPERADOR_PUBLIC = "PUBLIC";
-	private static final String OPERADOR_STATIC = "STATIC";
-	private static final String OPERADOR_VOID = "VOID";
-	
-	private static final String OPERADOR_IF = "IF";
-	private static final String OPERADOR_WHILE = "WHILE";
-	private static final String OPERADOR_ELSE = "ELSE";
-	private static final String OPERADOR_CASE = "CASE";
-	private static final String OPERADOR_DEFAULT = "DEFAULT";
-	private static final String OPERADOR_FOR = "FOR";
-	private static final String OPERADOR_CATCH = "CATCH";
-	private static final String OPERADOR_THROW = "THROW";
-	
-	// METADATOS
+	// DATOS SOBRE EL METODO
 	private String nombre;
 	private ArrayList<String> codigo;
 	
@@ -63,9 +21,11 @@ public class Metodo {
 	private int halsteadLongitud;
 	private double halsteadVolumen;
 	
+	// PARA CALCULAR HALSTEAD
 	private HashMap<String, Integer> operadores;
 	private HashMap<String, Integer> operandos;
 	
+	// PARA TENER REFERENCIA A QUE CLASE PERTENECE
 	private Clase clase;
 	
 	public Metodo(String nombre, Clase clase) {
@@ -90,38 +50,38 @@ public class Metodo {
 			
 			if(encontreComentarioMultiliena) {
 				this.cantidaLineasComentadas++;
-				if(linea.contains(CIERRE_COMENTARIO_MULTI_LINEA)) {
+				if(linea.contains(Constantes.CIERRE_COMENTARIO_MULTI_LINEA)) {
 					encontreComentarioMultiliena = false;
 				}
 				continue;
 			}
 			
-			if(linea.contains(INICIO_COMENTARIO_UNA_LINEA)) {
+			if(linea.contains(Constantes.INICIO_COMENTARIO_UNA_LINEA)) {
 				this.cantidaLineasComentadas++;
 			}
 			
-			if(linea.contains(INICIO_COMENTARIO_MULTI_LINEA)) {
+			if(linea.contains(Constantes.INICIO_COMENTARIO_MULTI_LINEA)) {
 				this.cantidaLineasComentadas++;
 				encontreComentarioMultiliena = true;
 				continue;
 			}
 			
-			if(this.esLineaEnBlanco(linea)) {
+			if(Verificador.esLineaEnBlanco(linea)) {
 				this.cantidadLineasBlanco++;
 				continue;
 			}
 			
-			if(this.esDecision(linea)) {
-				this.complejidadCiclomática += this.contarCantidadOcurrencias(linea, OPERADOR_LOGICO_AND) + 
-						this.contarCantidadOcurrencias(linea, OPERADOR_LOGICO_OR) + 1; 
+			if(Verificador.esDecision(linea)) {
+				this.complejidadCiclomática += this.contarCantidadOcurrencias(linea, Constantes.OPERADOR_LOGICO_AND) + 
+						this.contarCantidadOcurrencias(linea, Constantes.OPERADOR_LOGICO_OR) + 1; 
 				continue;
 				
 			}
 		}
-		
+	
 		// Sumamos porque V(G) = P + 1
 		this.complejidadCiclomática++;
-		
+	
 		this.cantidadLinaesSoloCodigo = this.cantidadLineasTotales - (this.cantidadLineasBlanco + this.cantidaLineasComentadas);
 		
 		this.porcentajeComentarios = 100 * this.cantidaLineasComentadas / (double) this.cantidadLineasTotales;
@@ -145,35 +105,42 @@ public class Metodo {
 		this.calcularFanOut();
 	}
 
-	// Fan in: Cantidad de veces que un metodo es llamado
+	// Fan in: Cantidad de veces que un metodo X es llamado por otros.
 	private void calcularFanIn() {
+		this.fanIn = 0;
 		for(Metodo metodo : clase.getMetodos()) {
+			
+			// Para no tener en cuenta el mismo metodo
 			if(metodo.getNombre().equals(this.nombre)) {
 				continue;
 			}
 			
 			for(String linea : metodo.getCodigo()) {
-				if(linea.contains(this.nombre)) {
+				if(linea.contains(this.nombre) && Verificador.contieneParentesisCerradosAbiertos(linea)) {
 					this.fanIn++;
 				}
 			}
 		}
 	}
 	
-	// Fan out: Cantidad de veces que una funcion llama a otras funciones
+	// Fan out: Cantidad de veces que un método X llama a otros.
 	private void calcularFanOut() {
+		this.fanOut = 0;
 		for(String linea : this.codigo) {
 			for(Metodo metodo : this.clase.getMetodos()) {
 				
-				if(metodo.getNombre().equals(this.nombre)) {
-					continue;
-				}
-				
+				// Para no tener en cuenta el mismo metodo
 				if(metodo.getNombre().equals(this.clase.getNombre())) {
 					continue;
 				}
 				
-				if(linea.contains(metodo.getNombre())) {
+				// Para que no tenga en cuenta el encabezado
+				if(Verificador.esEncabezadoMetodo(linea)) {
+					continue;
+				}
+				
+				if(linea.contains(metodo.getNombre()) && Verificador.contieneParentesisCerradosAbiertos(linea)) {
+					System.out.println(linea);
 					this.fanOut++;
 				}
 			}
@@ -181,10 +148,10 @@ public class Metodo {
 	}
 	
 	private void buscarOperadoresOperandos(String linea) {
-		String[] palabras = linea.replace("(", " ( ").replace(")", " ) ").replace(",", " , ").split(ESPACIO);
+		String[] palabras = linea.replace("(", " ( ").replace(")", " ) ").replace(",", " , ").split(Constantes.ESPACIO);
 		for(String palabra : palabras) {
 		
-			if(this.esOperadorHalstead(palabra)) {
+			if(Verificador.esOperadorHalstead(palabra)) {
 				
 				if(this.operadores.containsKey(palabra)) {
 					this.operadores.put(palabra, this.operadores.get(palabra) + 1);
@@ -204,7 +171,7 @@ public class Metodo {
 	
 	private int contarCantidadOcurrencias(String linea, String palabraObj) {
 		int contador = 0;
-		String[] palabras = linea.split(ESPACIO);
+		String[] palabras = linea.split(Constantes.ESPACIO);
 		
 		for(int i = 0; i < palabras.length; i++) {
 			if(palabraObj.equals(palabras[i])) {
@@ -212,50 +179,6 @@ public class Metodo {
 			}
 		}
 		return contador;
-	}
-	
-	private boolean esLineaEnBlanco(String string) {
-		if(string.equals(ESPACIO) || string.equals(LINEA_VACIA) || string.equals(SALTO_LINEA)) {
-			return true;
-		}
-		return false;
-	}
-	
-	private boolean esDecision(String string) {
-		if(string.toUpperCase().contains(OPERADOR_IF) || string.toUpperCase().contains(OPERADOR_WHILE)) {
-			return true;
-		}
-		return false;
-	}
-	
-	private boolean esOperadorHalstead(String string) {
-		if(string.equals(OPERADOR_LOGICO_AND) || string.equals(OPERADOR_LOGICO_OR) || string.equals(OPERADOR_LOGICO_MAYOR) ||
-				string.equals(OPERADOR_LOGICO_MAYOR) || string.equals(OPERADOR_LOGICO_MAYOR_IGUAL) || string.equals(OPERADOR_LOGICO_MENOR) ||
-				string.equals(OPERADOR_LOGICO_MENOR_IGUAL) || string.equals(OPERADOR_LOGICO_IGUAL) || string.equals(OPERADOR_LOGICO_DISTINTO_IGUAL)) {
-			return true;
-		}
-		
-		if(string.equals(OPERADOR_SUMA) || string.equals(OPERADOR_RESTA) || string.equals(OPERADOR_DIVISION) || string.equals(OPERADOR_MULTIPLICACION) ||
-				string.equals(OPERADOR_ASIGNACION)) {
-			return true;
-		}
-		
-		if(string.toUpperCase().equals(OPERADOR_INT) || string.toUpperCase().equals(OPERADOR_FLOAT) || string.toUpperCase().equals(OPERADOR_DOUBLE)  ) {
-			return true;
-		}
-		
-		if(string.toUpperCase().equals(OPERADOR_PUBLIC) || string.toUpperCase().equals(OPERADOR_STATIC) || 
-				string.toUpperCase().equals(OPERADOR_VOID)) {
-			return true;
-		}
-		
-		if(string.toUpperCase().equals(OPERADOR_IF) || string.toUpperCase().equals(OPERADOR_WHILE) || string.toUpperCase().equals(OPERADOR_ELSE)|| 
-				string.toUpperCase().equals(OPERADOR_CASE) || string.toUpperCase().equals(OPERADOR_DEFAULT) || string.toUpperCase().equals(OPERADOR_FOR) ||
-				string.toUpperCase().equals(OPERADOR_CATCH) || string.toUpperCase().equals(OPERADOR_THROW)) {
-			return true;
-		}
-		
-		return false;
 	}
 	
 	private void reestablecerValores() {

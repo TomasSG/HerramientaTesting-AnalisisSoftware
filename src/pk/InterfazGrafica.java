@@ -9,7 +9,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
@@ -27,12 +26,10 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JTextField;
 import java.awt.Color;
-import java.awt.SystemColor;
-import java.awt.Rectangle;
 
 public class InterfazGrafica extends JFrame {
 
-	// CONSTANTES
+	// TEXTOS
 	private static final String TITULO = "Herramienta Testing - Grupo 03";
 	private static final String MSJ_LABEL_LINEAS_TOTALES_CODIGO = "Cantidad de líneas totales";
 	private static final String MSJ_LABEL_LINEAS_SOLO_CODIGO = "Cantidad de líneas de solo código";
@@ -61,22 +58,18 @@ public class InterfazGrafica extends JFrame {
 	private static final String MSJ_RECOMENDACION_FAN_IN = "Este método tiene un Fan In considerable, se recomienda aplicar técnicas exhaustivas de testo\n";
 	private static final String MSJ_RECOMENDACION_FAN_OUT = "Este método tiene un Fan Out considerable, se recomienda tener en cuenta la dependencias de otros métodos\n";
 
-	private static final String STRING_NULA = "";
 	private static final String EXTENSION_JAVA = ".java";
-	
-	private static final int VALOR_MAXIMO_COMPLEJIDAD_CICLOMATICA = 10;
-	private static final int VALOR_MINIMO_PORCENTAJE_LINEAS_COMENTADAS = 10;
-	private static final int VALOR_MAXIMO_FAN_IN = 6;
-	private static final int VALOR_MAXIMO_FAN_OUT = 6;
 
 	// ELEMENTOS DE PANTALLA
 	private JTextArea textoCodigo;
+	private JTextArea textoRecomendaciones;
 	private JList<File> listaArchivos;
 	private JList<String> listaMetodos;
 	private JButton btnSeleccionarCarpeta;
 	private JLabel lblMetodos;
 	private JLabel lblArchivos;
 	private JPanel contentPane;
+	private JLabel lblAreaRecomendaciones;
 	private JTextField textLineasCodigo;
 	private JTextField textLineasSoloCodigo;
 	private JTextField textLineasComentadas;
@@ -96,9 +89,6 @@ public class InterfazGrafica extends JFrame {
 	// ELEMENTOS DE LA LOGICA
 	private AppManager appManager;
 	private Metodo metodo;
-	private JTextArea textoRecomendaciones;
-	private JLabel lblAreaRecomendaciones;
-	
 
 	/**
 	 * Launch the application.
@@ -136,14 +126,14 @@ public class InterfazGrafica extends JFrame {
 		textoCodigo.setBounds(10, 120, 925, 170);
 		textoCodigo.setEditable(false);
 		textoCodigo.setLineWrap(true);
-		textoCodigo.setText(STRING_NULA);
+		textoCodigo.setText(Constantes.LINEA_VACIA);
 		
 		textoRecomendaciones = new JTextArea();
 		textoRecomendaciones.setText("");
 		textoRecomendaciones.setLineWrap(true);
 		textoRecomendaciones.setEditable(false);
 		textoRecomendaciones.setBounds(12, 455, 923, 64);
-		textoRecomendaciones.setText(STRING_NULA);
+		textoRecomendaciones.setText(Constantes.LINEA_VACIA);
 
 		listaArchivos = new JList<File>();
 		listaArchivos.setBounds(164, 10, 350, 90);
@@ -368,9 +358,6 @@ public class InterfazGrafica extends JFrame {
 				if(archivo != null) {
 					restablecerMetricas();
 					cargarMetodos(archivo.toString());
-				} else {
-					JOptionPane.showConfirmDialog(null, MSJ_ERROR, TITULO_ERROR, 
-							JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
 				}
 				
 			}
@@ -423,19 +410,19 @@ public class InterfazGrafica extends JFrame {
 			// Para dar recomendaciones
 			String msj = "";
 			
-			if(metodo.getComplejidadCiclomática() > VALOR_MAXIMO_COMPLEJIDAD_CICLOMATICA) {
+			if(metodo.getComplejidadCiclomática() > Constantes.VALOR_MAXIMO_COMPLEJIDAD_CICLOMATICA) {
 				msj += MSJ_RECOMENDACION_COMPLEJIDAD_CICLOMATICA;
 			}
 			
-			if(metodo.getPorcentajeComentarios() < VALOR_MINIMO_PORCENTAJE_LINEAS_COMENTADAS) {
+			if(metodo.getPorcentajeComentarios() < Constantes.VALOR_MINIMO_PORCENTAJE_LINEAS_COMENTADAS) {
 				msj += MSJ_RECOMENDACION_PORCENTAJE_LINEAS_COMENTADAS;
 			}
 			
-			if(metodo.getFanIn() > VALOR_MAXIMO_FAN_IN) {
+			if(metodo.getFanIn() > Constantes.VALOR_MAXIMO_FAN_IN) {
 				msj += MSJ_RECOMENDACION_FAN_IN;
 			}
 			
-			if(metodo.getFanOut() > VALOR_MAXIMO_FAN_OUT) {
+			if(metodo.getFanOut() > Constantes.VALOR_MAXIMO_FAN_OUT) {
 				msj += MSJ_RECOMENDACION_FAN_OUT;
 			}
 			
@@ -449,19 +436,19 @@ public class InterfazGrafica extends JFrame {
 	}
 	
 	private void restablecerMetricas() {
-		textoCodigo.setText(STRING_NULA);
-		textLineasCodigo.setText(STRING_NULA);
-		textLineasSoloCodigo.setText(STRING_NULA);
-		textLineasComentadas.setText(STRING_NULA);
-		textLineasBlanco.setText(STRING_NULA);
-		textPorcentajeComentarios.setText(STRING_NULA);
-		textComplejidadCiclomatica.setText(STRING_NULA);
-		textFanIn.setText(STRING_NULA);
-		textFanOut.setText(STRING_NULA);
-		textHalsteadLongitud.setText(STRING_NULA);
-		textHalsteadVolumen.setText(STRING_NULA);
+		textoCodigo.setText(Constantes.LINEA_VACIA);
+		textLineasCodigo.setText(Constantes.LINEA_VACIA);
+		textLineasSoloCodigo.setText(Constantes.LINEA_VACIA);
+		textLineasComentadas.setText(Constantes.LINEA_VACIA);
+		textLineasBlanco.setText(Constantes.LINEA_VACIA);
+		textPorcentajeComentarios.setText(Constantes.LINEA_VACIA);
+		textComplejidadCiclomatica.setText(Constantes.LINEA_VACIA);
+		textFanIn.setText(Constantes.LINEA_VACIA);
+		textFanOut.setText(Constantes.LINEA_VACIA);
+		textHalsteadLongitud.setText(Constantes.LINEA_VACIA);
+		textHalsteadVolumen.setText(Constantes.LINEA_VACIA);
 		
-		textoRecomendaciones.setText(STRING_NULA);
+		textoRecomendaciones.setText(Constantes.LINEA_VACIA);
 	}
 	
 	private void cargarMetodos(String path) {
@@ -487,6 +474,18 @@ public class InterfazGrafica extends JFrame {
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			
+			// Para no mezclar con posibles cosas que estaban antes.
+			this.metodo = null;
+			
+			// Vaciar elementos de la lista de metodos
+			this.listaMetodos.clearSelection();
+			this.listaMetodos.removeAll();
+			
+			// Vaciar elementos de la lista de archivos
+			this.listaArchivos.clearSelection();
+			this.listaArchivos.removeAll();
+			
 			cargarArchivos(chooser.getSelectedFile());
 		}
 	}
@@ -497,8 +496,8 @@ public class InterfazGrafica extends JFrame {
 			if (!archivo.isDirectory()) {
 				dlm.addElement(archivo);
 			}
-			this.listaArchivos.setModel(dlm);
 		}
+		this.listaArchivos.setModel(dlm);
 	}
 
 	public class FiltroJava implements FileFilter {
