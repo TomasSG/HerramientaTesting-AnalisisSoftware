@@ -72,8 +72,13 @@ public class Metodo {
 			}
 			
 			if(Verificador.esDecision(linea)) {
-				this.complejidadCiclomática += this.contarCantidadOcurrencias(linea, Constantes.OPERADOR_LOGICO_AND) + 
-						this.contarCantidadOcurrencias(linea, Constantes.OPERADOR_LOGICO_OR) + 1; 
+				
+				String lineaEspaciada = linea.replace(Constantes.OPERADOR_LOGICO_AND, Constantes.ESPACIO + Constantes.OPERADOR_LOGICO_AND + 
+						Constantes.ESPACIO).replace(Constantes.OPERADOR_LOGICO_OR, Constantes.ESPACIO + Constantes.OPERADOR_LOGICO_OR + 
+						Constantes.ESPACIO);
+				
+				this.complejidadCiclomática += this.contarCantidadOcurrencias(lineaEspaciada, Constantes.OPERADOR_LOGICO_AND) + 
+						this.contarCantidadOcurrencias(lineaEspaciada, Constantes.OPERADOR_LOGICO_OR) + 1; 
 				continue;
 				
 			}
