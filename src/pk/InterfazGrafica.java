@@ -36,7 +36,7 @@ public class InterfazGrafica extends JFrame {
 	private static final String MSJ_LABEL_LINEAS_COMENTADAS = "Cantidad de líneas comentadas";
 	private static final String MSJ_LABEL_LINEAS_EN_BLANCO = "Cantidad de líneas en blanco";
 	private static final String MSJ_LABEL_PORCENTAJE_DE_COMENTARIOS = "Porcentaje de comentarios (%)";
-	private static final String MSJ_LABEL_COMPLEJIDAD_CICLOMATICA = "Comlejidad ciclomatica";
+	private static final String MSJ_LABEL_COMPLEJIDAD_CICLOMATICA = "Complejidad ciclomatica";
 	private static final String MSJ_LABEL_FAN_IN = "Fan in";
 	private static final String MSJ_LABEL_FAN_OUT = "Fan out";
 	private static final String MSJ_LABEL_HALSTEAD_LONGITUD = "Halstead - longitud";
